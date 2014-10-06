@@ -14,19 +14,11 @@ $ npm install --save xdg-trashdir
 var trashdir = require('xdg-trashdir');
 
 trashdir(function (err, dir) {
-	if (err) {
-		throw err;
-	}
-
 	console.log(dir);
-	//=> ~/.local/share/Trash
+	//=> /home/johndoe/.local/share/Trash
 });
 
 trashdir('foo.zip', function (err, dir) {
-	if (err) {
-		throw err;
-	}
-
 	console.log(dir);
 	//=> /media/johndoe/UUI/.Trash/1000
 });

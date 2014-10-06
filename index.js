@@ -43,14 +43,14 @@ module.exports = function (file, cb) {
 			if (exists) {
 				fs.lstat(top, function (err, stats) {
 					if (err) {
-						cb(err);
+						cb(null, path.join(base.data, 'Trash'));
 						return;
 					}
 
 					if (stats.isSymbolicLink()) {
 						mkdir(topuid, function (err) {
 							if (err) {
-								cb(err);
+								cb(null, path.join(base.data, 'Trash'));
 								return;
 							}
 
@@ -61,7 +61,7 @@ module.exports = function (file, cb) {
 
 					mkdir(path.join(top, String(process.getuid())), function (err) {
 						if (err) {
-							cb(err);
+							cb(null, path.join(base.data, 'Trash'));
 							return;
 						}
 
@@ -73,7 +73,7 @@ module.exports = function (file, cb) {
 
 			mkdir(topuid, function (err) {
 				if (err) {
-					cb(err);
+					cb(null, path.join(base.data, 'Trash'));
 					return;
 				}
 
