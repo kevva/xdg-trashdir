@@ -38,6 +38,7 @@ module.exports = function (file, cb) {
 
 		var top = path.join(res.mount, '.Trash');
 		var topuid = top + '-' + process.getuid();
+		var stickyBitMode = 17407;
 
 		fs.exists(top, function (exists) {
 			if (exists) {
@@ -47,7 +48,7 @@ module.exports = function (file, cb) {
 						return;
 					}
 
-					if (stats.isSymbolicLink() || stats.mode !== 17407) {
+					if (stats.isSymbolicLink() || stats.mode !== stickyBitMode) {
 						mkdir(topuid, function (err) {
 							if (err) {
 								cb(null, path.join(base.data, 'Trash'));
