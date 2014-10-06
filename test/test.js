@@ -24,40 +24,42 @@ test('get the trash path using a file', function (t) {
 	});
 });
 
-test('get the trash path on a mounted drive', function (t) {
-	t.plan(3);
+if (!process.env.TRAVIS) {
+	test('get the trash path on a mounted drive', function (t) {
+		t.plan(3);
 
-	var name = 'test-disk';
-	var dirname = path.join(__dirname, '..', name, '.Trash-') + process.getuid();
+		var name = 'test-disk';
+		var dirname = path.join(__dirname, '..', name, '.Trash-') + process.getuid();
 
-	exec(path.join(__dirname, 'mount_create') + ' ' + name, function (err) {
-		t.assert(!err);
+		exec(path.join(__dirname, 'mount_create') + ' ' + name, function (err) {
+			t.assert(!err);
 
-		trashdir(path.join(__dirname, '..', name), function (err, dir) {
-			t.assert(dir === dirname);
+			trashdir(path.join(__dirname, '..', name), function (err, dir) {
+				t.assert(dir === dirname);
+
+				exec(path.join(__dirname, 'mount_clean') + ' ' + name, function (err) {
+					t.assert(!err);
+				});
+			});
+		});
+	});
+
+	test('get the trash path on a mounted drive with a top trash', function (t) {
+		t.plan(3);
+
+		var name = 'test-disk-top';
+		var dirname = path.join(__dirname, '..', name, '.Trash', String(process.getuid()));
+
+		exec(path.join(__dirname, 'mount_create') + ' ' + name + ' --with-trash', function (err) {
+			t.assert(!err);
+
+			trashdir(path.join(__dirname, '..', name), function (err, dir) {
+				t.assert(dir === dirname);
+			});
 
 			exec(path.join(__dirname, 'mount_clean') + ' ' + name, function (err) {
 				t.assert(!err);
 			});
 		});
 	});
-});
-
-test('get the trash path on a mounted drive with a top trash', function (t) {
-	t.plan(3);
-
-	var name = 'test-disk-top';
-	var dirname = path.join(__dirname, '..', name, '.Trash', String(process.getuid()));
-
-	exec(path.join(__dirname, 'mount_create') + ' ' + name + ' --with-trash', function (err) {
-		t.assert(!err);
-
-		trashdir(path.join(__dirname, '..', name), function (err, dir) {
-			t.assert(dir === dirname);
-		});
-
-		exec(path.join(__dirname, 'mount_clean') + ' ' + name, function (err) {
-			t.assert(!err);
-		});
-	});
-});
+}

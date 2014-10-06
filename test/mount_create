@@ -21,7 +21,7 @@ create_mount() {
 
 mount_it() {
 	mkdir -p "${point}"
-	sudo mount -t ext2 "${img}" "${point}"
+	sudo mount -t ext2 "${img}" "${point}" -o loop
 	sudo chmod a+rwx "${point}"
 
 	if [[ ${trash} ]]; then
