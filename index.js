@@ -47,7 +47,7 @@ module.exports = function (file, cb) {
 						return;
 					}
 
-					if (stats.isSymbolicLink()) {
+					if (stats.isSymbolicLink() || stats.mode !== 17407) {
 						mkdir(topuid, function (err) {
 							if (err) {
 								cb(null, path.join(base.data, 'Trash'));

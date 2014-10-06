@@ -26,6 +26,7 @@ mount_it() {
 
 	if [[ ${trash} ]]; then
 		mkdir -p "${point}/.Trash"
+		chmod 1777 "${point}/.Trash"
 	fi
 }
 
