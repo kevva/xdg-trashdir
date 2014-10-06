@@ -41,7 +41,7 @@ module.exports = function (file, cb) {
 
 		fs.exists(top, function (exists) {
 			if (exists) {
-				fs.lstat(top, function (err, stats) {
+				return fs.lstat(top, function (err, stats) {
 					if (err) {
 						cb(null, path.join(base.data, 'Trash'));
 						return;

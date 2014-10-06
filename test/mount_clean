@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -e
+
+readonly point="$1"
+readonly img="$1.img"
+
+run() {
+	sudo umount "${point}" || true
+	rm -rf "${img}"
+	rm -rf "${point}"
+}
+
+run

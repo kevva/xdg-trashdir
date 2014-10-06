@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -e
+
+readonly point="$1"
+readonly img="$1.img"
+
+parse_opts() {
+	for opt in $@
+	do
+		case ${opt} in
+			--with-trash) trash=true ;;
+		esac
+	done
+}
+
+create_mount() {
+	dd if=/dev/zero of="${img}" bs=$((1024*1024)) count=1
+	mke2fs -F "${img}"
+}
+
+mount_it() {
+	mkdir -p "${point}"
+	sudo mount -t ext2 "${img}" "${point}"
+	sudo chmod a+rwx "${point}"
+
+	if [[ ${trash} ]]; then
+		mkdir -p "${point}/.Trash"
+	fi
+}
+
+run() {
+	parse_opts "$@"
+	create_mount
+	mount_it
+}
+
+run "$@"
