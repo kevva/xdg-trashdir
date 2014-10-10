@@ -20,7 +20,7 @@ trashdir(function (err, dir) {
 
 trashdir('foo.zip', function (err, dir) {
 	console.log(dir);
-	//=> /media/johndoe/UUI/.Trash/1000
+	//=> /media/johndoe/UUI/.Trash-1000
 });
 ```
 
