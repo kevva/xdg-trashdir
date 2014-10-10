@@ -27,7 +27,6 @@
     "xdg"
   ],
   "dependencies": {
-    "mkdirp": "^0.5.0",
     "mount-point": "^1.0.0",
     "xdg-basedir": "^1.0.0"
   },

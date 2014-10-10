@@ -2,7 +2,6 @@
 
 var base = require('xdg-basedir');
 var fs = require('fs');
-var mkdir = require('mkdirp');
 var mount = require('mount-point');
 var path = require('path');
 
@@ -49,37 +48,16 @@ module.exports = function (file, cb) {
 					}
 
 					if (stats.isSymbolicLink() || stats.mode !== stickyBitMode) {
-						mkdir(topuid, function (err) {
-							if (err) {
-								cb(null, path.join(base.data, 'Trash'));
-								return;
-							}
-
-							cb(null, topuid);
-							return;
-						});
+						cb(null, topuid);
+						return;
 					}
 
-					mkdir(path.join(top, String(process.getuid())), function (err) {
-						if (err) {
-							cb(null, path.join(base.data, 'Trash'));
-							return;
-						}
-
-						cb(null, path.join(top, String(process.getuid())));
-						return;
-					});
+					cb(null, path.join(top, String(process.getuid())));
+					return;
 				});
 			}
 
-			mkdir(topuid, function (err) {
-				if (err) {
-					cb(null, path.join(base.data, 'Trash'));
-					return;
-				}
-
-				cb(null, topuid);
-			});
+			cb(null, topuid);
 		});
 	});
 };
