@@ -40,24 +40,24 @@ module.exports = function (file, cb) {
 		var stickyBitMode = 17407;
 
 		fs.exists(top, function (exists) {
-			if (exists) {
-				return fs.lstat(top, function (err, stats) {
-					if (err) {
-						cb(null, path.join(base.data, 'Trash'));
-						return;
-					}
-
-					if (stats.isSymbolicLink() || stats.mode !== stickyBitMode) {
-						cb(null, topuid);
-						return;
-					}
-
-					cb(null, path.join(top, String(process.getuid())));
-					return;
-				});
+			if (!exists) {
+				cb(null, topuid);
+				return;
 			}
 
-			cb(null, topuid);
+			fs.lstat(top, function (err, stats) {
+				if (err) {
+					cb(null, path.join(base.data, 'Trash'));
+					return;
+				}
+
+				if (stats.isSymbolicLink() || stats.mode !== stickyBitMode) {
+					cb(null, topuid);
+					return;
+				}
+
+				cb(null, path.join(top, String(process.getuid())));
+			});
 		});
 	});
 };
