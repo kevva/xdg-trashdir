@@ -19,6 +19,11 @@ module.exports = function (file, cb) {
 		file = undefined;
 	}
 
+	if (process.platform !== 'linux') {
+		cb(new Error('Only Linux systems are supported'));
+		return;
+	}
+
 	if (!file) {
 		cb(null, path.join(base.data, 'Trash'));
 		return;
