@@ -20,8 +20,7 @@ module.exports = function (file, cb) {
 	}
 
 	if (process.platform !== 'linux') {
-		cb(new Error('Only Linux systems are supported'));
-		return;
+		throw new Error('Only Linux systems are supported');
 	}
 
 	if (!file) {
