@@ -34,7 +34,7 @@ module.exports = function (file, cb) {
 			return;
 		}
 
-		if (res.mount === '/') {
+		if (res.mount === '/' || res.mount === '/home') {
 			cb(null, path.join(base.data, 'Trash'));
 			return;
 		}
