@@ -55,10 +55,10 @@ if (!process.env.TRAVIS) {
 
 			trashdir(path.join(__dirname, '..', name), function (err, dir) {
 				t.assert(dir === dirname);
-			});
 
-			exec(path.join(__dirname, 'mount_clean') + ' ' + name, function (err) {
-				t.assert(!err, err);
+				exec(path.join(__dirname, 'mount_clean') + ' ' + name, function (err) {
+					t.assert(!err, err);
+				});
 			});
 		});
 	});
