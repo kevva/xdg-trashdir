@@ -50,25 +50,23 @@ module.exports = function (file, cb) {
 			var topuid = top + '-' + process.getuid();
 			var stickyBitMode = 17407;
 
-			fs.exists(top, function (exists) {
-				if (!exists) {
-					cb(null, topuid);
-					return;
-				}
-
-				fs.lstat(top, function (err, stats) {
-					if (err) {
-						cb(null, path.join(base.data, 'Trash'));
-						return;
-					}
-
-					if (stats.isSymbolicLink() || stats.mode !== stickyBitMode) {
+			fs.lstat(top, function (err, stats) {
+				if (err) {
+					if (err.code === 'ENOENT') {
 						cb(null, topuid);
 						return;
 					}
 
-					cb(null, path.join(top, String(process.getuid())));
-				});
+					cb(null, path.join(base.data, 'Trash'));
+					return;
+				}
+
+				if (stats.isSymbolicLink() || stats.mode !== stickyBitMode) {
+					cb(null, topuid);
+					return;
+				}
+
+				cb(null, path.join(top, String(process.getuid())));
 			});
 		});
 	});
