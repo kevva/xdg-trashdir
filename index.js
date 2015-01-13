@@ -51,12 +51,12 @@ module.exports = function (file, cb) {
 			var stickyBitMode = 17407;
 
 			fs.lstat(top, function (err, stats) {
-				if (err) {
-					if (err.code === 'ENOENT') {
-						cb(null, topuid);
-						return;
-					}
+				if (err && err.code === 'ENOENT') {
+					cb(null, topuid);
+					return;
+				}
 
+				if (err) {
 					cb(null, path.join(base.data, 'Trash'));
 					return;
 				}
