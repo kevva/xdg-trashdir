@@ -1,18 +1,10 @@
 'use strict';
 
-var base = require('xdg-basedir');
 var fs = require('fs');
-var mount = require('mount-point');
+var mountPoint = require('mount-point');
 var path = require('path');
 var userHome = require('user-home');
-
-/**
- * Get the correct trash path on Linux
- *
- * @param {String} file
- * @param {Function} cb
- * @api public
- */
+var xdgBasedir = require('xdg-basedir');
 
 module.exports = function (file, cb) {
 	if (typeof file === 'function' && !cb) {
@@ -25,24 +17,24 @@ module.exports = function (file, cb) {
 	}
 
 	if (!file) {
-		cb(null, path.join(base.data, 'Trash'));
+		cb(null, path.join(xdgBasedir.data, 'Trash'));
 		return;
 	}
 
-	mount(userHome, function (err, ret) {
+	mountPoint(userHome, function (err, ret) {
 		if (err) {
 			cb(err);
 			return;
 		}
 
-		mount(file, function (err, res) {
+		mountPoint(file, function (err, res) {
 			if (err) {
 				cb(err);
 				return;
 			}
 
 			if (res.mount === ret.mount) {
-				cb(null, path.join(base.data, 'Trash'));
+				cb(null, path.join(xdgBasedir.data, 'Trash'));
 				return;
 			}
 
@@ -57,7 +49,7 @@ module.exports = function (file, cb) {
 				}
 
 				if (err) {
-					cb(null, path.join(base.data, 'Trash'));
+					cb(null, path.join(xdgBasedir.data, 'Trash'));
 					return;
 				}
 
