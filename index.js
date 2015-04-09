@@ -1,8 +1,8 @@
 'use strict';
 
 var fs = require('fs');
-var mountPoint = require('mount-point');
 var path = require('path');
+var mountPoint = require('mount-point');
 var userHome = require('user-home');
 var xdgBasedir = require('xdg-basedir');
 

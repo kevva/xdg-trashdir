@@ -2,11 +2,13 @@
 
 > Get the correct trash path on Linux according to the [spec](http://www.ramendik.ru/docs/trashspec.html)
 
+
 ## Install
 
-```sh
+```
 $ npm install --save xdg-trashdir
 ```
+
 
 ## Usage
 
@@ -23,6 +25,28 @@ xdgTrashdir('foo.zip', function (err, dir) {
 	//=> /media/johndoe/UUI/.Trash-1000
 });
 ```
+
+
+## API
+
+### xdgTrashdir([file], callback)
+
+#### file
+
+Type: `string`
+
+Get the trash path for a specific file.
+
+#### callback(err, dir)
+
+Type: `function`
+
+##### dir
+
+Type: `string`
+
+The path to the trash.
+
 
 ## License
 

@@ -1,9 +1,9 @@
 'use strict';
 
-var base = require('xdg-basedir');
 var exec = require('child_process').exec;
 var path = require('path');
 var test = require('ava');
+var xdgBasedir = require('xdg-basedir');
 var trashdir = require('../');
 
 test('get the trash path', function (t) {
@@ -11,7 +11,7 @@ test('get the trash path', function (t) {
 
 	trashdir(function (err, dir) {
 		t.assert(!err, err);
-		t.assert(dir === path.join(base.data, 'Trash'));
+		t.assert(dir === path.join(xdgBasedir.data, 'Trash'), dir);
 	});
 });
 
@@ -20,7 +20,7 @@ test('get the trash path using a file', function (t) {
 
 	trashdir('index.js', function (err, dir) {
 		t.assert(!err, err);
-		t.assert(dir === path.join(base.data, 'Trash'));
+		t.assert(dir === path.join(xdgBasedir.data, 'Trash'), dir);
 	});
 });
 
@@ -35,7 +35,7 @@ if (!process.env.TRAVIS) {
 			t.assert(!err, err);
 
 			trashdir(path.join(__dirname, '..', name), function (err, dir) {
-				t.assert(dir === dirname);
+				t.assert(dir === dirname, dir);
 
 				exec(path.join(__dirname, 'mount_clean') + ' ' + name, function (err) {
 					t.assert(!err, err);
@@ -54,7 +54,7 @@ if (!process.env.TRAVIS) {
 			t.assert(!err, err);
 
 			trashdir(path.join(__dirname, '..', name), function (err, dir) {
-				t.assert(dir === dirname);
+				t.assert(dir === dirname, dir);
 
 				exec(path.join(__dirname, 'mount_clean') + ' ' + name, function (err) {
 					t.assert(!err, err);
