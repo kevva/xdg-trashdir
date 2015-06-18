@@ -37,11 +37,11 @@ Type: `string`
 
 Get the trash path for a specific file.
 
-#### callback(err, dir)
+#### callback(err, path)
 
 Type: `function`
 
-##### dir
+##### path
 
 Type: `string`
 
