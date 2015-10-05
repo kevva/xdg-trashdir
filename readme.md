@@ -15,12 +15,12 @@ $ npm install --save xdg-trashdir
 ```js
 var xdgTrashdir = require('xdg-trashdir');
 
-xdgTrashdir(function (err, dir) {
+xdgTrashdir().then(function (dir) {
 	console.log(dir);
 	//=> /home/johndoe/.local/share/Trash
 });
 
-xdgTrashdir('foo.zip', function (err, dir) {
+xdgTrashdir('foo.zip').then(function (dir) {
 	console.log(dir);
 	//=> /media/johndoe/UUI/.Trash-1000
 });
@@ -29,23 +29,15 @@ xdgTrashdir('foo.zip', function (err, dir) {
 
 ## API
 
-### xdgTrashdir([file], callback)
+### xdgTrashdir([file])
+
+Returns a promise that resolves the path to the trash.
 
 #### file
 
 Type: `string`
 
 Get the trash path for a specific file.
-
-#### callback(err, path)
-
-Type: `function`
-
-##### path
-
-Type: `string`
-
-The path to the trash.
 
 
 ## License
