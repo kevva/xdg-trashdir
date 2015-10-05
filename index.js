@@ -7,6 +7,8 @@ var xdgBasedir = require('xdg-basedir');
 var pify = require('pify');
 var Promise = require('pinkie-promise');
 
+var mntPoint = pify(mountPoint);
+
 module.exports = function (file) {
 	if (process.platform !== 'linux') {
 		return Promise.reject(new Error('Only Linux systems are supported'));
@@ -17,8 +19,8 @@ module.exports = function (file) {
 	}
 
 	return Promise.all([
-		pify(mountPoint, Promise)(userHome),
-		pify(mountPoint, Promise)(file)
+		mntPoint(userHome),
+		mntPoint(file)
 	]).then(function (result) {
 		var ret = result[0];
 		var res = result[1];

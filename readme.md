@@ -13,14 +13,14 @@ $ npm install --save xdg-trashdir
 ## Usage
 
 ```js
-var xdgTrashdir = require('xdg-trashdir');
+const xdgTrashdir = require('xdg-trashdir');
 
-xdgTrashdir().then(function (dir) {
+xdgTrashdir().then(dir => {
 	console.log(dir);
 	//=> /home/johndoe/.local/share/Trash
 });
 
-xdgTrashdir('foo.zip').then(function (dir) {
+xdgTrashdir('foo.zip').then(dir => {
 	console.log(dir);
 	//=> /media/johndoe/UUI/.Trash-1000
 });
