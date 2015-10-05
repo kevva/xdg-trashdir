@@ -28,6 +28,8 @@
   ],
   "dependencies": {
     "mount-point": "^1.0.0",
+    "pify": "^2.2.0",
+    "pinkie-promise": "^1.0.0",
     "user-home": "^1.1.0",
     "xdg-basedir": "^1.0.0"
   },
@@ -36,6 +38,8 @@
     "ava": "*"
   },
   "xo": {
-    "ignore": ["test/test.js"]
+    "ignore": [
+      "test/test.js"
+    ]
   }
 }
