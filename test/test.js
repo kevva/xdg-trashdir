@@ -1,7 +1,7 @@
 import {execFile} from 'child_process';
 import path from 'path';
 import test from 'ava';
-import xdgBaseDir from 'xdg-basedir';
+import xdgBasedir from 'xdg-basedir';
 import pify from 'pify';
 import trashdir from '../';
 
