@@ -1,64 +1,44 @@
-'use strict';
-var execFile = require('child_process').execFile;
-var path = require('path');
-var test = require('ava');
-var xdgBasedir = require('xdg-basedir');
-var trashdir = require('../');
+import {execFile} from 'child_process';
+import path from 'path';
+import test from 'ava';
+import xdgBasedir from 'xdg-basedir';
+import pify from 'pify';
+import trashdir from '../';
 
-test('get the trash path', function (t) {
-	t.plan(2);
+const exec = pify(execFile);
 
-	trashdir(function (err, dir) {
-		t.assert(!err, err);
-		t.assert(dir === path.join(xdgBasedir.data, 'Trash'), dir);
-	});
+test('get the trash path', async t => {
+	const dir = await trashdir();
+	t.is(path.join(xdgBasedir.data, 'Trash'), dir);
 });
 
-test('get the trash path using a file', function (t) {
-	t.plan(2);
-
-	trashdir('index.js', function (err, dir) {
-		t.assert(!err, err);
-		t.assert(dir === path.join(xdgBasedir.data, 'Trash'), dir);
-	});
+test('get the trash path using a file', async t => {
+	const dir = await trashdir('index.js');
+	t.is(path.join(xdgBasedir.data, 'Trash'), dir);
 });
 
 if (!process.env.TRAVIS) {
-	test('get the trash path on a mounted drive', function (t) {
-		t.plan(3);
+	test('get the trash path on a mounted drive', async t => {
+		const name = 'test-disk';
+		const dirname = path.join(__dirname, '..', name, '.Trash-') + process.getuid();
 
-		var name = 'test-disk';
-		var dirname = path.join(__dirname, '..', name, '.Trash-') + process.getuid();
+		await exec(path.join(__dirname, 'mount_create'), [name]);
 
-		execFile(path.join(__dirname, 'mount_create'), [name], function (err) {
-			t.assert(!err, err);
+		const dir = await trashdir(path.join(__dirname, '..', name));
+		t.is(dirname, dir);
 
-			trashdir(path.join(__dirname, '..', name), function (err, dir) {
-				t.assert(dir === dirname, dir);
-
-				execFile(path.join(__dirname, 'mount_clean'), [name], function (err) {
-					t.assert(!err, err);
-				});
-			});
-		});
+		await exec(path.join(__dirname, 'mount_clean'), [name]);
 	});
 
-	test('get the trash path on a mounted drive with a top trash', function (t) {
-		t.plan(3);
+	test('get the trash path on a mounted drive with a top trash', async t => {
+		const name = 'test-disk-top';
+		const dirname = path.join(__dirname, '..', name, '.Trash', String(process.getuid()));
 
-		var name = 'test-disk-top';
-		var dirname = path.join(__dirname, '..', name, '.Trash', String(process.getuid()));
+		await exec(path.join(__dirname, 'mount_create'), [name, '--with-trash']);
 
-		execFile(path.join(__dirname, 'mount_create'), [name, '--with-trash'], function (err) {
-			t.assert(!err, err);
+		const dir = await trashdir(path.join(__dirname, '..', name));
+		t.is(dirname, dir);
 
-			trashdir(path.join(__dirname, '..', name), function (err, dir) {
-				t.assert(dir === dirname, dir);
-
-				execFile(path.join(__dirname, 'mount_clean'), [name], function (err) {
-					t.assert(!err, err);
-				});
-			});
-		});
+		await exec(path.join(__dirname, 'mount_clean'), [name]);
 	});
 }

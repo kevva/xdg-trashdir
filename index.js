@@ -4,61 +4,48 @@ var path = require('path');
 var mountPoint = require('mount-point');
 var userHome = require('user-home');
 var xdgBasedir = require('xdg-basedir');
+var pify = require('pify');
+var Promise = require('pinkie-promise');
+var mntPoint = pify(mountPoint);
 
-module.exports = function (file, cb) {
-	if (typeof file === 'function' && !cb) {
-		cb = file;
-		file = undefined;
-	}
-
+module.exports = function (file) {
 	if (process.platform !== 'linux') {
-		throw new Error('Only Linux systems are supported');
+		return Promise.reject(new Error('Only Linux systems are supported'));
 	}
 
 	if (!file) {
-		cb(null, path.join(xdgBasedir.data, 'Trash'));
-		return;
+		return Promise.resolve(path.join(xdgBasedir.data, 'Trash'));
 	}
 
-	mountPoint(userHome, function (err, ret) {
-		if (err) {
-			cb(err);
-			return;
+	return Promise.all([
+		mntPoint(userHome),
+		mntPoint(file)
+	]).then(function (result) {
+		var ret = result[0];
+		var res = result[1];
+
+		if (ret.mount === res.mount) {
+			return path.join(xdgBasedir.data, 'Trash');
 		}
 
-		mountPoint(file, function (err, res) {
-			if (err) {
-				cb(err);
-				return;
-			}
+		var top = path.join(res.mount, '.Trash');
+		var topuid = top + '-' + process.getuid();
+		var stickyBitMode = 17407;
 
-			if (res.mount === ret.mount) {
-				cb(null, path.join(xdgBasedir.data, 'Trash'));
-				return;
-			}
-
-			var top = path.join(res.mount, '.Trash');
-			var topuid = top + '-' + process.getuid();
-			var stickyBitMode = 17407;
-
-			fs.lstat(top, function (err, stats) {
-				if (err && err.code === 'ENOENT') {
-					cb(null, topuid);
-					return;
-				}
-
-				if (err) {
-					cb(null, path.join(xdgBasedir.data, 'Trash'));
-					return;
-				}
-
+		return pify(fs.lstat)(top)
+			.then(function (stats) {
 				if (stats.isSymbolicLink() || stats.mode !== stickyBitMode) {
-					cb(null, topuid);
-					return;
+					return topuid;
 				}
 
-				cb(null, path.join(top, String(process.getuid())));
+				return path.join(top, String(process.getuid()));
+			})
+			.catch(function (err) {
+				if (err.code === 'ENOENT') {
+					return topuid;
+				}
+
+				return path.join(xdgBasedir.data, 'Trash');
 			});
-		});
 	});
 };

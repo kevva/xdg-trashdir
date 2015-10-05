@@ -13,7 +13,7 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "test": "node test/test.js"
+    "test": "xo && ava"
   },
   "files": [
     "index.js"
@@ -28,10 +28,18 @@
   ],
   "dependencies": {
     "mount-point": "^1.0.0",
+    "pify": "^2.2.0",
+    "pinkie-promise": "^1.0.0",
     "user-home": "^1.1.0",
     "xdg-basedir": "^1.0.0"
   },
   "devDependencies": {
-    "ava": "^0.0.4"
+    "xo": "*",
+    "ava": "*"
+  },
+  "xo": {
+    "ignore": [
+      "test/test.js"
+    ]
   }
 }
