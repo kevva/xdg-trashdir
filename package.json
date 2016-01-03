@@ -27,6 +27,7 @@
     "xdg"
   ],
   "dependencies": {
+    "@sindresorhus/df": "^1.0.1",
     "mount-point": "^1.0.0",
     "pify": "^2.2.0",
     "pinkie-promise": "^1.0.0",
