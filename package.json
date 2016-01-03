@@ -1,6 +1,6 @@
 {
   "name": "xdg-trashdir",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Get the correct trash path on Linux",
   "license": "MIT",
   "repository": "kevva/xdg-trashdir",
