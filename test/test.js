@@ -12,6 +12,11 @@ test('get the trash path', async t => {
 	t.is(path.join(xdgBasedir.data, 'Trash'), dir);
 });
 
+test('get all trash paths', async t => {
+	const dir = await trashdir.all();
+	t.ok(dir.length);
+});
+
 test('get the trash path using a file', async t => {
 	const dir = await trashdir(path.join(__dirname, '../index.js'));
 	t.is(path.join(xdgBasedir.data, 'Trash'), dir);

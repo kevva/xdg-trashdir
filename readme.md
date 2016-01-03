@@ -24,6 +24,11 @@ xdgTrashdir('foo.zip').then(dir => {
 	console.log(dir);
 	//=> /media/johndoe/UUI/.Trash-1000
 });
+
+xdgTrashdir.all().then(dirs => {
+	console.log(dirs);
+	//=> ['/home/johndoe/.local/share/Trash', '/media/johndoe/UUI/.Trash-1000', ...]
+});
 ```
 
 
@@ -38,6 +43,10 @@ Returns a promise that resolves the path to the trash.
 Type: `string`
 
 Get the trash path for a specific file.
+
+### xdgTrashdir.all()
+
+Returns a promise that resolves to an array with all possible trash paths.
 
 
 ## License
