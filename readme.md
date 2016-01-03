@@ -17,12 +17,12 @@ const xdgTrashdir = require('xdg-trashdir');
 
 xdgTrashdir().then(dir => {
 	console.log(dir);
-	//=> /home/johndoe/.local/share/Trash
+	//=> '/home/johndoe/.local/share/Trash'
 });
 
 xdgTrashdir('foo.zip').then(dir => {
 	console.log(dir);
-	//=> /media/johndoe/UUI/.Trash-1000
+	//=> '/media/johndoe/UUI/.Trash-1000'
 });
 
 xdgTrashdir.all().then(dirs => {

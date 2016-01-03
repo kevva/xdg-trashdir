@@ -13,8 +13,8 @@ test('get the trash path', async t => {
 });
 
 test('get all trash paths', async t => {
-	const dir = await trashdir.all();
-	t.ok(dir.length);
+	const dirs = await trashdir.all();
+	t.ok(dirs.length);
 });
 
 test('get the trash path using a file', async t => {
