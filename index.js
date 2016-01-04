@@ -46,11 +46,11 @@ module.exports = function (file) {
 		var ret = result[0];
 		var res = result[1];
 
-		if (ret.mount === res.mount) {
+		if (ret === res) {
 			return path.join(xdgBasedir.data, 'Trash');
 		}
 
-		return check(path.join(res.mount, '.Trash'));
+		return check(path.join(res, '.Trash'));
 	});
 };
 

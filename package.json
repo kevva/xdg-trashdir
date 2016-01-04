@@ -28,11 +28,11 @@
   ],
   "dependencies": {
     "@sindresorhus/df": "^1.0.1",
-    "mount-point": "^1.0.0",
+    "mount-point": "^2.0.0",
     "pify": "^2.2.0",
-    "pinkie-promise": "^1.0.0",
-    "user-home": "^1.1.0",
-    "xdg-basedir": "^1.0.0"
+    "pinkie-promise": "^2.0.0",
+    "user-home": "^2.0.0",
+    "xdg-basedir": "^2.0.0"
   },
   "devDependencies": {
     "xo": "*",
