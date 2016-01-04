@@ -37,10 +37,5 @@
   "devDependencies": {
     "xo": "*",
     "ava": "*"
-  },
-  "xo": {
-    "ignore": [
-      "test/test.js"
-    ]
   }
 }
