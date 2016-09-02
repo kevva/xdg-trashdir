@@ -1,36 +1,34 @@
 'use strict';
-var fs = require('fs');
-var path = require('path');
-var df = require('@sindresorhus/df');
-var mountPoint = require('mount-point');
-var userHome = require('user-home');
-var xdgBasedir = require('xdg-basedir');
-var pify = require('pify');
-var Promise = require('pinkie-promise');
-var mntPoint = pify(mountPoint);
+const fs = require('fs');
+const path = require('path');
+const df = require('@sindresorhus/df');
+const mountPoint = require('mount-point');
+const userHome = require('user-home');
+const xdgBasedir = require('xdg-basedir');
+const pify = require('pify');
 
-function check(file) {
-	var topuid = file + '-' + process.getuid();
-	var stickyBitMode = 17407;
+const check = file => {
+	const topuid = `${file}-${process.getuid()}`;
+	const stickyBitMode = 17407;
 
 	return pify(fs.lstat)(file)
-		.then(function (stats) {
+		.then(stats => {
 			if (stats.isSymbolicLink() || stats.mode !== stickyBitMode) {
 				return topuid;
 			}
 
 			return path.join(file, String(process.getuid()));
 		})
-		.catch(function (err) {
+		.catch(err => {
 			if (err.code === 'ENOENT') {
 				return topuid;
 			}
 
 			return path.join(xdgBasedir.data, 'Trash');
 		});
-}
+};
 
-module.exports = function (file) {
+module.exports = file => {
 	if (process.platform !== 'linux') {
 		return Promise.reject(new Error('Only Linux systems are supported'));
 	}
@@ -40,11 +38,11 @@ module.exports = function (file) {
 	}
 
 	return Promise.all([
-		mntPoint(userHome),
-		mntPoint(file)
-	]).then(function (result) {
-		var ret = result[0];
-		var res = result[1];
+		mountPoint(userHome),
+		mountPoint(file)
+	]).then(result => {
+		const ret = result[0];
+		const res = result[1];
 
 		if (ret === res) {
 			return path.join(xdgBasedir.data, 'Trash');
@@ -54,18 +52,16 @@ module.exports = function (file) {
 	});
 };
 
-module.exports.all = function () {
+module.exports.all = () => {
 	if (process.platform !== 'linux') {
 		return Promise.reject(new Error('Only Linux systems are supported'));
 	}
 
-	return pify(df)().then(function (list) {
-		return Promise.all(list.map(function (el) {
-			if (el.mountpoint === '/') {
-				return path.join(xdgBasedir.data, 'Trash');
-			}
+	return df().then(list => Promise.all(list.map(x => {
+		if (x.mountpoint === '/') {
+			return path.join(xdgBasedir.data, 'Trash');
+		}
 
-			return check(path.join(el.mountpoint, '.Trash'));
-		}));
-	});
+		return check(path.join(x.mountpoint, '.Trash'));
+	})));
 };

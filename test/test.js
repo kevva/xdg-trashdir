@@ -1,11 +1,8 @@
-import {execFile} from 'child_process';
 import path from 'path';
 import test from 'ava';
 import xdgBasedir from 'xdg-basedir';
-import pify from 'pify';
+import execa from 'execa';
 import trashdir from '../';
-
-const exec = pify(execFile);
 
 test('get the trash path', async t => {
 	const dir = await trashdir();
@@ -14,7 +11,7 @@ test('get the trash path', async t => {
 
 test('get all trash paths', async t => {
 	const dirs = await trashdir.all();
-	t.ok(dirs.length);
+	t.truthy(dirs.length);
 });
 
 test('get the trash path using a file', async t => {
@@ -22,28 +19,28 @@ test('get the trash path using a file', async t => {
 	t.is(path.join(xdgBasedir.data, 'Trash'), dir);
 });
 
-if (!process.env.TRAVIS) {
+if (!process.env.CI) {
 	test('get the trash path on a mounted drive', async t => {
 		const name = 'test-disk';
 		const dirname = path.join(__dirname, name, '.Trash-') + process.getuid();
 
-		await exec(path.join(__dirname, 'mount_create'), [name]);
+		await execa(path.join(__dirname, 'mount_create'), [name]);
 
 		const dir = await trashdir(path.join(__dirname, name));
 		t.is(dirname, dir);
 
-		await exec(path.join(__dirname, 'mount_clean'), [name]);
+		await execa(path.join(__dirname, 'mount_clean'), [name]);
 	});
 
 	test('get the trash path on a mounted drive with a top trash', async t => {
 		const name = 'test-disk-top';
 		const dirname = path.join(__dirname, name, '.Trash', String(process.getuid()));
 
-		await exec(path.join(__dirname, 'mount_create'), [name, '--with-trash']);
+		await execa(path.join(__dirname, 'mount_create'), [name, '--with-trash']);
 
 		const dir = await trashdir(path.join(__dirname, name));
 		t.is(dirname, dir);
 
-		await exec(path.join(__dirname, 'mount_clean'), [name]);
+		await execa(path.join(__dirname, 'mount_clean'), [name]);
 	});
 }
