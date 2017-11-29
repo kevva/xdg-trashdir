@@ -39,16 +39,16 @@ module.exports = file => {
 
 	return Promise.all([
 		mountPoint(userHome),
-		mountPoint(file)
-	]).then(result => {
-		const ret = result[0];
-		const res = result[1];
-
-		if (ret === res) {
+		// ignore errors in case `file` is a dangling symlink
+		mountPoint(file).catch(() => {})
+	]).then(mountPoints => {
+		const homeMountPoint = mountPoints[0];
+		const fileMountPoint = mountPoints[1];
+		if (!fileMountPoint || fileMountPoint === homeMountPoint) {
 			return path.join(xdgBasedir.data, 'Trash');
 		}
 
-		return check(path.join(res, '.Trash'));
+		return check(path.join(fileMountPoint, '.Trash'));
 	});
 };
 
@@ -57,11 +57,11 @@ module.exports.all = () => {
 		return Promise.reject(new Error('Only Linux systems are supported'));
 	}
 
-	return df().then(list => Promise.all(list.map(x => {
-		if (x.mountpoint === '/') {
+	return df().then(list => Promise.all(list.map(file => {
+		if (file.mountpoint === '/') {
 			return path.join(xdgBasedir.data, 'Trash');
 		}
 
-		return check(path.join(x.mountpoint, '.Trash'));
+		return check(path.join(file.mountpoint, '.Trash'));
 	})));
 };
