@@ -39,7 +39,7 @@ module.exports = file => {
 
 	return Promise.all([
 		mountPoint(userHome),
-		// ignore errors in case `file` is a dangling symlink
+		// Ignore errors in case `file` is a dangling symlink
 		mountPoint(file).catch(() => {})
 	]).then(mountPoints => {
 		const homeMountPoint = mountPoints[0];
