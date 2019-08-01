@@ -3,7 +3,7 @@ import path from 'path';
 import test from 'ava';
 import xdgBasedir from 'xdg-basedir';
 import execa from 'execa';
-import trashdir from '../';
+import trashdir from '..';
 
 test('get the trash path', async t => {
 	const dir = await trashdir();
