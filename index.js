@@ -19,8 +19,8 @@ const check = file => {
 
 			return path.join(file, String(process.getuid()));
 		})
-		.catch(err => {
-			if (err.code === 'ENOENT') {
+		.catch(error => {
+			if (error.code === 'ENOENT') {
 				return topuid;
 			}
 
