@@ -36,14 +36,11 @@ module.exports = async file => {
 		return Promise.resolve(path.join(xdgBasedir.data, 'Trash'));
 	}
 
-	const mountPoints = await Promise.all([
+	const [homeMountPoint, fileMountPoint] = await Promise.all([
 		mountPoint(userHome),
 		// Ignore errors in case `file` is a dangling symlink
 		mountPoint(file).catch(() => {})
 	]);
-
-	const homeMountPoint = mountPoints[0];
-	const fileMountPoint = mountPoints[1];
 
 	if (!fileMountPoint || fileMountPoint === homeMountPoint) {
 		return path.join(xdgBasedir.data, 'Trash');
