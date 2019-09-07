@@ -1,6 +1,7 @@
 declare const xdgTrashdir: {
 	/**
-	Get the correct trash path for a file on Linux according to the [spec](http://www.ramendik.ru/docs/trashspec.html)
+	Get the correct trash path for a file on Linux according to the [spec](http://www.ramendik.ru/docs/trashspec.html).
+
 	@example
 	```
 	import xdgTrashdir = require('xdg-trashdir');
@@ -17,7 +18,8 @@ declare const xdgTrashdir: {
 	(filePath?: string): Promise<string>;
 
 	/**
-	Get all possible trash paths on Linux according to the [spec](http://www.ramendik.ru/docs/trashspec.html)
+	Get all possible trash paths on Linux according to the [spec](http://www.ramendik.ru/docs/trashspec.html).
+
 	@example
 	```
 	import xdgTrashdir = require('xdg-trashdir');
