@@ -6,18 +6,18 @@ const mountPoint = require('mount-point');
 const userHome = require('user-home');
 const xdgBasedir = require('xdg-basedir');
 
-const check = async file => {
-	const topuid = `${file}-${process.getuid()}`;
+const check = async filePath => {
+	const topuid = `${filePath}-${process.getuid()}`;
 	const stickyBitMode = 17407;
 
 	try {
-		const stats = await fs.lstat(file);
+		const stats = await fs.lstat(filePath);
 
 		if (stats.isSymbolicLink() || stats.mode !== stickyBitMode) {
 			return topuid;
 		}
 
-		return path.join(file, String(process.getuid()));
+		return path.join(filePath, String(process.getuid()));
 	} catch (error) {
 		if (error.code === 'ENOENT') {
 			return topuid;
@@ -27,19 +27,19 @@ const check = async file => {
 	}
 };
 
-module.exports = async file => {
+module.exports = async filePath => {
 	if (process.platform !== 'linux') {
 		return Promise.reject(new Error('Only Linux systems are supported'));
 	}
 
-	if (!file) {
+	if (!filePath) {
 		return Promise.resolve(path.join(xdgBasedir.data, 'Trash'));
 	}
 
 	const [homeMountPoint, fileMountPoint] = await Promise.all([
 		mountPoint(userHome),
 		// Ignore errors in case `file` is a dangling symlink
-		mountPoint(file).catch(() => {})
+		mountPoint(filePath).catch(() => {})
 	]);
 
 	if (!fileMountPoint || fileMountPoint === homeMountPoint) {
@@ -54,11 +54,11 @@ module.exports.all = async () => {
 		return Promise.reject(new Error('Only Linux systems are supported'));
 	}
 
-	return Promise.all((await df()).map(file => {
-		if (file.mountpoint === '/') {
+	return Promise.all((await df()).map(fileSystem => {
+		if (fileSystem.mountpoint === '/') {
 			return path.join(xdgBasedir.data, 'Trash');
 		}
 
-		return check(path.join(file.mountpoint, '.Trash'));
+		return check(path.join(fileSystem.mountpoint, '.Trash'));
 	}));
 };
